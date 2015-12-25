@@ -26,15 +26,54 @@ public static class FractionalLineAlgorithm
         int directionY = Math.Sign(deltaY);
         int gridX = (int)Math.Round(startX);
         int gridY = (int)Math.Round(startY);
-        yield return new Coordinate(gridX, gridY);
-
+        double lastChangePosition;
         if (deltaX == 0)
         {
             if (deltaY == 0)
             {
+                yield return new Coordinate(gridX, gridY);
                 yield break;
             }
+            /*
             //Vertical
+            //Copy-paste galore
+            double lastChangeDif = deltaY;
+            lastChangePosition = startX;
+            if (lastChangeDif < one)
+            {
+                yield return new Coordinate(gridX, gridY);
+
+                double roundDirection = directionY > 0 ? half : -half;
+                double compare = Math.Abs(Math.Round(lastChangePosition) + roundDirection - lastChangePosition);
+                if (lastChangeDif > compare)
+                {
+                    gridY += directionY;
+                    yield return new Coordinate(gridX, gridY);
+                }
+            } else
+            {
+                for (double y = 0d; ; y += one)
+                {
+                    if (y + 1 > lastChangeDif) {
+                        double roundDirection = directionY > 0 ? half : -half;
+                        lastChangeDif -= y;
+                        double compare = Math.Abs(Math.Round(lastChangePosition) + roundDirection - lastChangePosition);
+                        if (lastChangeDif > compare)
+                        {
+                            gridY += directionY;
+                            yield return new Coordinate(gridX, gridY);
+
+                        }
+                        break;
+                    }
+                    gridY += directionY;
+                    yield return new Coordinate(gridX, gridY);
+
+                    if (y + 1 == lastChangeDif) break;
+
+                }
+            }
+            */
             yield break;
         }
         if (deltaY == 0)
@@ -47,7 +86,7 @@ public static class FractionalLineAlgorithm
         double positionY = startY;
         double slope = Math.Abs(deltaY / deltaX);
 
-        double lastChangePosition = positionY;
+        lastChangePosition = positionY;
 
         double used = 0d;
 
@@ -55,9 +94,16 @@ public static class FractionalLineAlgorithm
         if (positionX % half != 0 || positionX % 1 == 0)
         {
             double newPositionX = directionX > 0 ? Math.Round(positionX) + .5f : Math.Round(positionX) - .5f;
+            if ((directionX > 0 && newPositionX > endX) ||
+                (directionX < 0 && newPositionX < endX)
+            )
+            {
+                newPositionX = endX;
+            }
             double difX = newPositionX - positionX;
 
             double absDifX = Math.Abs(difX);
+
             double difY = absDifX * slope * directionY;
             double newPositionY = positionY + difY;
             if (
@@ -67,12 +113,14 @@ public static class FractionalLineAlgorithm
                 newPositionY = endY;
             }
             else {
+
                 double lastChangeDif = Math.Abs(newPositionY - lastChangePosition);
 
                 bool yPassed = false;
+                yield return new Coordinate(gridX, gridY);
+
                 if (lastChangeDif < one)
                 {
-                    yield return new Coordinate(gridX, gridY);
 
                     double roundDirection = directionY > 0 ? half : -half;
                     double compare = Math.Abs(Math.Round(lastChangePosition) + roundDirection - lastChangePosition);
@@ -124,10 +172,18 @@ public static class FractionalLineAlgorithm
         for (double x = used;; x += one)
         {
             double difX = directionX;
-            if (x + one >= absDeltaX)
+            if (x + one > absDeltaX)
             {
+                double roundDirection = directionX > 0 ? half : -half;
                 difX = absDeltaX - x;
-                doBreak = true;
+                double compare = Math.Abs(Math.Round(positionX + roundDirection) - positionX);
+                if (difX > compare)
+                {
+                    doBreak = true;
+                }
+                else {
+                    break;
+                }
             }
             double newPositionX = positionX + difX;
 
@@ -141,6 +197,8 @@ public static class FractionalLineAlgorithm
             {
                 newPositionY = endY;
             }
+
+            //God, give me nested functions plzzzzz
             double lastChangeDif = Math.Abs(newPositionY - lastChangePosition);
             bool yPassed = false;
             yield return new Coordinate(gridX, gridY);
@@ -213,6 +271,10 @@ public static class FractionalLineAlgorithm
         public override string ToString()
         {
             return string.Format("({0}, {1})", X, Y);
+        }
+        public override int GetHashCode()
+        {
+            return X.GetHashCode() ^ Y.GetHashCode();
         }
     }
 

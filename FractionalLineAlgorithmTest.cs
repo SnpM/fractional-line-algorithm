@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System;
-
+using System.Collections.Generic;
 public class FractionalLineAlgorithmTest : MonoBehaviour
 {
     const int size = 64;
@@ -18,10 +18,14 @@ public class FractionalLineAlgorithmTest : MonoBehaviour
         double endX = (double)end.position.x;
         double endY = (double)end.position.z;
 
-      
-
+        //irony lolz
+        HashSet<FractionalLineAlgorithm.Coordinate> redundancyChecker = new HashSet<FractionalLineAlgorithm.Coordinate>();
 
         foreach (FractionalLineAlgorithm.Coordinate coor in (FractionalLineAlgorithm.Trace (startX,startY,endX,endY))) {
+            if (!redundancyChecker.Add(coor)) {
+                Debug.LogErrorFormat ("Redundancy detected for {0}", coor);
+            }
+
             Outlined[coor.X + offset ,coor.Y + offset ] = true;
         }
         Vector3 size = new Vector3(1,.1f,1);
