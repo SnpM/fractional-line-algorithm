@@ -174,18 +174,28 @@ public static class FractionalLineAlgorithm
         for (double x = used;; x += one)
         {
             double difX = directionX;
-            if (x + one > absDeltaX)
+            if (x + one >= absDeltaX)
             {
+                #if false
+                //fuak dis shet
                 double roundDirection = directionX > 0 ? half : -half;
                 difX = absDeltaX - x;
-                double compare = Math.Abs(Math.Round(positionX + roundDirection) - positionX);
+                double compare = Math.Abs(Math.Round(endX) + roundDirection - endX);
+                Debug.Log(difX + ", " + compare);
                 if (difX > compare)
                 {
                     doBreak = true;
-                }
-                else {
+                } else
+                {
                     break;
                 }
+                #else
+                int gridEndX = (int)Math.Round(endX);
+                int gridEndY = (int)Math.Round(endY);
+                if (gridX == gridEndX && gridY == gridEndY)
+                yield return new  Coordinate(gridEndX,gridEndY);
+                break;
+                #endif
             }
             double newPositionX = positionX + difX;
 
