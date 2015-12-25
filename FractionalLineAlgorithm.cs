@@ -34,11 +34,12 @@ public static class FractionalLineAlgorithm
                 yield return new Coordinate(gridX, gridY);
                 yield break;
             }
-            /*
+
             //Vertical
             //Copy-paste galore
-            double lastChangeDif = deltaY;
-            lastChangePosition = startX;
+            lastChangePosition = startY;
+
+            double lastChangeDif = absDeltaY;
             if (lastChangeDif < one)
             {
                 yield return new Coordinate(gridX, gridY);
@@ -73,13 +74,14 @@ public static class FractionalLineAlgorithm
 
                 }
             }
-            */
+
             yield break;
         }
         if (deltaY == 0)
         {
             //Horizontal
-            yield break;
+            //yield break;
+            //fuck it
         }
 
         double positionX = startX;
