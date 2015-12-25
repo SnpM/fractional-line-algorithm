@@ -29,9 +29,10 @@ public static class FractionalLineAlgorithm
         double lastChangePosition;
         if (deltaX == 0)
         {
+            yield return new Coordinate(gridX, gridY);
+
             if (deltaY == 0)
             {
-                yield return new Coordinate(gridX, gridY);
                 yield break;
             }
 
@@ -42,7 +43,6 @@ public static class FractionalLineAlgorithm
             double lastChangeDif = absDeltaY;
             if (lastChangeDif < one)
             {
-                yield return new Coordinate(gridX, gridY);
 
                 double roundDirection = directionY > 0 ? half : -half;
                 double compare = Math.Abs(Math.Round(lastChangePosition) + roundDirection - lastChangePosition);
