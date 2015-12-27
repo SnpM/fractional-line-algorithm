@@ -16,7 +16,6 @@ namespace PanLineAlgorithm
         public static IEnumerable<Coordinate> Trace(double startX, double startY, double endX, double endY)
         {
             //TODO: Make it look prettier
-
             const double one = 1;
             const double half = .5d;
 
@@ -80,12 +79,6 @@ namespace PanLineAlgorithm
                 }
 
                 yield break;
-            }
-            if (deltaY == 0)
-            {
-                //Horizontal
-                //yield break;
-                //fuck it
             }
 
             double positionX = startX;
